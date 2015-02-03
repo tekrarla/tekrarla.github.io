@@ -1,4 +1,10 @@
 function validate_url(url) {
+    /**
+     * Validation of url
+     * @param url:
+     * @return: Boolean
+     * @type {RegExp}
+     */
     var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
     var regex = new RegExp(expression);
     return url.match(regex);
@@ -27,6 +33,12 @@ function parse_url(url) {
     };
 
     var a = document.createElement('a');
+
+    // Check http prefix in url
+    console.log(url.substring(0, 7));
+    if(url.substring(0, 7) != "http://" && url.substring(0, 8) != "https://" ) {
+        url = "http://" + url;
+    }
     a.href = url;
 
     // domain of url; www.youtube.com
@@ -41,6 +53,7 @@ function parse_url(url) {
         video_id = regex_for_youtube.exec(a.search);
 
         if (video_id && video_id.length > 1) {
+            // Example response of regex
             // ["?v=VirrBI8bmHEasdasd&asdasd", "VirrBI8bmHEasdasd", index: 0, input: "?v=VirrBI8bmHEasdasd&asdasd"]
             video_id = video_id[1];
         }
@@ -60,6 +73,7 @@ function parse_url(url) {
         var regex_for_vimeo = /^.*\/([0-9]+).*$/g;
         video_id = regex_for_vimeo.exec(a.pathname);
         if (video_id && video_id.length > 1) {
+            // Example response of regex
             // ["?v=VirrBI8bmHEasdasd&asdasd", "VirrBI8bmHEasdasd", index: 0, input: "?v=VirrBI8bmHEasdasd&asdasd"]
             video_id = video_id[1];
         }
@@ -87,6 +101,15 @@ function parse_url(url) {
 }
 
 function create_video_iframe(url_obj) {
+    /**
+     * Create iframe for video
+     * @param url_obj:
+     * {
+     *      "domain_type": <domain_type>,
+     *      "video_id": <video_id>,
+     *      "hostname": <video_hostname>
+     * }
+     */
     var iframe_html = "";
     if(url_obj["domain_type"] == 0) {
         iframe_html = '<iframe width="60%" height="315" ' +
@@ -107,10 +130,8 @@ function tekrarla() {var url = $("#video-url").val();
 
     if( validate_url(url) ) {
         var url_obj = parse_url(url);
-        console.log(url_obj["data"]);
         if (url_obj["status"] == 0) {
             create_video_iframe(url_obj["data"]);
-            getVideo(url_obj["data"]["video_id"]);
         }
         else if (url_obj["status"] == 1) {
             alert(getText("Unknown problem"));

@@ -19,3 +19,5 @@ After that I created an iframe with playlist. You can look tekrarla.js for detai
 
 
 I implement my own localization method named getText in language.js. It get all dom object which has class named "text-div" and translate it with languages object in languages.js. Browser language is used for this operation.
+
+You can see page in http://tekrar.la/
